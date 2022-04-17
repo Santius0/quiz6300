@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import QuestionComponent from "./Question.component";
+import HTMLRenderer from 'react-html-renderer'
 
 // import "./form.css";
 
@@ -8,10 +9,10 @@ const QuizComponent = () => {
     const defaultQuizConfig = {
         playerName: "",
         numQuestions: 1,
-        category: null,
-        difficulty: null,
-        questionType: null,
-        sessionToken: null,
+        category: "",
+        difficulty: "",
+        questionType: "",
+        sessionToken: "",
     };
 
     const defaultQuizState = {
@@ -28,9 +29,12 @@ const QuizComponent = () => {
 
     const [questions, setQuestions] = useState([]);
 
+    const [categories, setCategories] = useState([]);
+
     useEffect(() => {
         fetchSessionToken();
-        fetchQuestions();
+        // fetchQuestions();
+        fetchCategories();
     }, [])
 
     const updateQuizConfigItem = (key, value) => {
@@ -50,10 +54,10 @@ const QuizComponent = () => {
     const generateQuestionRequestUrl = () => {
         let url = "https://opentdb.com/api.php?";
         url = url + "amount=" + quizConfig.numQuestions;
-        if(quizConfig.category) url = url + "&category=" + quizConfig.category;
-        if(quizConfig.difficulty) url = url + "&difficulty=" + quizConfig.difficulty;
-        if(quizConfig.questionType) url = url + "&type=" + quizConfig.questionType;
-        if(quizConfig.sessionToken) url = url + "&token=" + quizConfig.sessionToken;
+        if(quizConfig.category !== "") url = url + "&category=" + quizConfig.category;
+        if(quizConfig.difficulty !== "") url = url + "&difficulty=" + quizConfig.difficulty;
+        if(quizConfig.questionType !== "") url = url + "&type=" + quizConfig.questionType;
+        if(quizConfig.sessionToken !== "") url = url + "&token=" + quizConfig.sessionToken;
         return url;
     }
 
@@ -129,11 +133,26 @@ const QuizComponent = () => {
     }
 
     const startQuiz = () => {
+        fetchQuestions();
         updateQuizStateItem("started", true);
     }
 
     const finishQuiz = () => {
       updateQuizStateItem("finished", true);
+    }
+
+    const fetchCategories = () =>{
+        const url = "https://opentdb.com/api_category.php";
+        fetch(url)
+            .then(res => {
+                return res.json();
+            })
+            .then(body => {
+                setCategories(body.trivia_categories);
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
     let questionComponents = [];
@@ -147,6 +166,24 @@ const QuizComponent = () => {
         return (
             <form>
                 <input type="text" value={quizConfig.playerName} onChange={handleConfigChange} name="playerName" placeholder="name"/>
+                <input type="number" value={quizConfig.numQuestions} onChange={handleConfigChange} name="numQuestions" placeholder="Number Of Questions"/>
+                <select value={quizConfig.category} onChange={handleConfigChange} name="category">
+                    <option value="">Any</option>
+                    {categories.map(item => (
+                        <option key={item.id} value={item.id}>{item.name}</option>
+                    ))}
+                </select>
+                <select value={quizConfig.difficulty} onChange={handleConfigChange} name="difficulty">
+                    <option value="">Any</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <select value={quizConfig.questionType} onChange={handleConfigChange} name="questionType">
+                    <option value="">Any</option>
+                    <option value="multiple">Multiple Choice</option>
+                    <option value="boolean">True/False</option>
+                </select>
                 <button type="submit" onClick={e => {e.preventDefault(); startQuiz();}}>Start Quiz</button>
             </form>
         );

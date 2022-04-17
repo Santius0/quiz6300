@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import HTMLRenderer from "react-html-renderer";
 import "./Question.css";
 
 const QuestionComponent = props => {
@@ -30,9 +31,11 @@ const QuestionComponent = props => {
 
     return(
         <div>
-            <h1>{props.question.question}</h1>
+            <h1><HTMLRenderer html={props.question.question}/></h1>
             {answers.map((value, index) => (
-                <p className={selected === index ? "selected" : ""} key={index} onClick={() => handleSelect(index)}>{value}</p>
+                <p className={selected === index ? "selected" : ""} key={index} onClick={() => handleSelect(index)}>
+                    <HTMLRenderer html={value}/>
+                </p>
             ))}
             <button disabled={selected === null} onClick={submitAnswer}>Answer</button>
         </div>
