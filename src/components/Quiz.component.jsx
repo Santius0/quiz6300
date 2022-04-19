@@ -1,18 +1,37 @@
 import React, {useEffect, useState} from "react";
-import QuestionComponent from "./Question.component";
-import HTMLRenderer from 'react-html-renderer'
+import {Box} from "@mui/system";
+import {Typography, CircularProgress, Button} from "@mui/material";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ReplayIcon from '@mui/icons-material/Replay';
 
-// import "./form.css";
+import QuestionComponent from "./Question.component";
+import SelectInputComponent from "./SelectInput.component";
+import TextInputComponent from "./TextInput.component";
+
+const defaultChoice = {name: "Any", value: ""};
+
+const difficulties = [
+    defaultChoice,
+    {name: "Easy", value: "easy"},
+    {name: "Medium", value: "medium"},
+    {name: "Hard", value: "hard"},
+];
+
+const questionTypes = [
+    defaultChoice,
+    {name: "Multiple Choice", value: "multiple"},
+    {name: "True/False", value: "boolean"},
+];
 
 const QuizComponent = () => {
 
     const defaultQuizConfig = {
         playerName: "",
         numQuestions: 1,
-        category: "",
-        difficulty: "",
-        questionType: "",
-        sessionToken: "",
+        category: defaultChoice,
+        difficulty: difficulties[0],
+        questionType: questionTypes[0],
+        sessionToken: defaultChoice.value,
     };
 
     const defaultQuizState = {
@@ -54,14 +73,15 @@ const QuizComponent = () => {
     const generateQuestionRequestUrl = () => {
         let url = "https://opentdb.com/api.php?";
         url = url + "amount=" + quizConfig.numQuestions;
-        if(quizConfig.category !== "") url = url + "&category=" + quizConfig.category;
-        if(quizConfig.difficulty !== "") url = url + "&difficulty=" + quizConfig.difficulty;
-        if(quizConfig.questionType !== "") url = url + "&type=" + quizConfig.questionType;
-        if(quizConfig.sessionToken !== "") url = url + "&token=" + quizConfig.sessionToken;
+        if(quizConfig.category.value !== defaultChoice.value) url = url + "&category=" + quizConfig.category.value;
+        if(quizConfig.difficulty.value !== defaultChoice.value) url = url + "&difficulty=" + quizConfig.difficulty.value;
+        if(quizConfig.questionType.value !== defaultChoice.value) url = url + "&type=" + quizConfig.questionType.value;
+        if(quizConfig.sessionToken !== defaultChoice.value) url = url + "&token=" + quizConfig.sessionToken;
         return url;
     }
 
     const fetchQuestions = () => {
+        console.log(quizConfig);
         updateQuizStateItem("loading", true);
         fetch(generateQuestionRequestUrl())
             .then(res =>{
@@ -148,62 +168,60 @@ const QuizComponent = () => {
                 return res.json();
             })
             .then(body => {
-                setCategories(body.trivia_categories);
+                setCategories([defaultChoice].concat(body.trivia_categories));
             })
             .catch(err => {
                 console.log(err);
             })
     }
 
-    let questionComponents = [];
-    for(let i=0; i<questions.length; i++){
-        questionComponents.push(<QuestionComponent key={i} question={questions[i]} onAnswer={handleOnAnswer}/>);
+    if(quizState.loading){
+        return(
+            <Box mt={20}>
+                <CircularProgress/>
+            </Box>
+        );
     }
-
-    if(quizState.loading) return <h1>Loading...</h1>
 
     if(!quizState.started){
         return (
-            <form>
-                <input type="text" value={quizConfig.playerName} onChange={handleConfigChange} name="playerName" placeholder="name"/>
-                <input type="number" value={quizConfig.numQuestions} onChange={handleConfigChange} name="numQuestions" placeholder="Number Of Questions"/>
-                <select value={quizConfig.category} onChange={handleConfigChange} name="category">
-                    <option value="">Any</option>
-                    {categories.map(item => (
-                        <option key={item.id} value={item.id}>{item.name}</option>
-                    ))}
-                </select>
-                <select value={quizConfig.difficulty} onChange={handleConfigChange} name="difficulty">
-                    <option value="">Any</option>
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                </select>
-                <select value={quizConfig.questionType} onChange={handleConfigChange} name="questionType">
-                    <option value="">Any</option>
-                    <option value="multiple">Multiple Choice</option>
-                    <option value="boolean">True/False</option>
-                </select>
-                <button type="submit" onClick={e => {e.preventDefault(); startQuiz();}}>Start Quiz</button>
-            </form>
+           <form>
+               <TextInputComponent label="Player Name" name="playerName" type="text" defaultValue={quizConfig.playerName} onChange={handleConfigChange}/>
+               <TextInputComponent label="Number of Questions" name="numQuestions" type="number" defaultValue={quizConfig.numQuestions} onChange={handleConfigChange}/>
+               <SelectInputComponent label="Category" name="category" options={categories.map(item => ({name: item.name, value: item.id}))} defaultOption={quizConfig.category} onChange={handleConfigChange}/>
+               <SelectInputComponent label="Difficulty" name="difficulty" options={difficulties} defaultOption={quizConfig.difficulty} defaultOptiononChange={handleConfigChange}/>
+               <SelectInputComponent label="Question Type" name="questionType" options={questionTypes} defaultOption={quizConfig.questionType} onChange={handleConfigChange}/>
+               <Box mt={3}>
+                   <Button type="submit" onClick={e => {e.preventDefault(); startQuiz();}} variant="contained">
+                       Start <PlayArrowIcon/>
+                   </Button>
+               </Box>
+           </form>
         );
     }
 
     if(quizState.finished){
         return (
-            <div>
-                <h3>Final Score: {quizState.currScore}/{questions.length}</h3>
-                <button onClick={e => {e.preventDefault(); reset();}}>Restart</button>
-            </div>
+            <Box mt={30}>
+                <Typography variant="h3" fontWeight="bold" mb={3}>
+                    Final Sore: {quizState.currScore}
+                </Typography>
+                <Button onClick={e => {e.preventDefault(); reset();}}>
+                    Play Again! <ReplayIcon/>
+                </Button>
+            </Box>
         );
     }
 
     return(
         <div>
-            <div className="react-form-container"> </div>
-            <h3>Question: {quizState.currQuestion + 1}/{questions.length}</h3>
-            <h3>Score: {quizState.currScore}</h3>
-            {questionComponents[quizState.currQuestion]}
+            <Box>
+                <Typography variant="h4">Question: {quizState.currQuestion + 1}/{questions.length}</Typography>
+                <QuestionComponent question={questions[quizState.currQuestion]} onAnswer={handleOnAnswer}/>
+                <Box mt={5}>
+                    Score: {quizState.currScore} / {questions.length}
+                </Box>
+            </Box>
         </div>
     );
 }

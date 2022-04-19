@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
+import {Button, Typography} from "@mui/material";
+import {Box} from "@mui/system";
 import HTMLRenderer from "react-html-renderer";
-import "./Question.css";
 
 const QuestionComponent = props => {
 
@@ -16,8 +17,7 @@ const QuestionComponent = props => {
         } else {
             setAnswers(["True", "False"]);
         }
-    }, [])
-
+    }, [props.question])
 
     const handleSelect = (answerIndex) => {
         if(answerIndex !== selected){
@@ -31,13 +31,19 @@ const QuestionComponent = props => {
 
     return(
         <div>
-            <h1><HTMLRenderer html={props.question.question}/></h1>
+            <Typography mt={5}>
+                <HTMLRenderer html={props.question.question}/>
+            </Typography>
             {answers.map((value, index) => (
-                <p className={selected === index ? "selected" : ""} key={index} onClick={() => handleSelect(index)}>
-                    <HTMLRenderer html={value}/>
-                </p>
+                <Box mt={2} key={index}>
+                    <Button onClick={() => handleSelect(index)} variant="contained" color={selected === index ? "success" : "primary"}>
+                        <HTMLRenderer html={value}/>
+                    </Button>
+                </Box>
             ))}
-            <button disabled={selected === null} onClick={submitAnswer}>Answer</button>
+            <Box mt={3}>
+                <Button disabled={selected === null} onClick={submitAnswer} variant="outlined">Answer</Button>
+            </Box>
         </div>
     );
 }
