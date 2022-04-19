@@ -27,7 +27,7 @@ const EndPage = ({score, playerName, questions, onPlayAgain}) => {
             <ImageComponent src={passed ? happy : sad} width={200} height={200}/>
             <Box mt={6}>
                 <Typography variant="h3" fontWeight="bold" mb={2}>
-                    {passed ? "Well Done!" + playerName : "Sorry " + playerName + ". Better Luck Next Time"}
+                    {passed ? "Well Done! " + playerName : "Sorry " + playerName + ". Better Luck Next Time"}
                 </Typography>
                 <Typography variant="h6" fontWeight="bold" mb={1}>
                     Score: {score}/{questions.length}
