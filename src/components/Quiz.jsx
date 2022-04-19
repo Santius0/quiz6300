@@ -78,7 +78,7 @@ const Quiz = () => {
 
     const generateQuestionRequestUrl = () => {
         let url = "https://opentdb.com/api.php?";
-        url = url + "amount=" + quizConfig.numQuestions;
+        url = url + "amount=" + parseInt(quizConfig.numQuestions);
         if(quizConfig.category.value !== defaultChoice.value) url = url + "&category=" + quizConfig.category.value;
         if(quizConfig.difficulty.value !== defaultChoice.value) url = url + "&difficulty=" + quizConfig.difficulty.value;
         if(quizConfig.questionType.value !== defaultChoice.value) url = url + "&type=" + quizConfig.questionType.value;
@@ -87,7 +87,6 @@ const Quiz = () => {
     }
 
     const fetchQuestions = () => {
-        console.log(quizConfig);
         updateQuizStateItem("loading", true);
         fetch(generateQuestionRequestUrl())
             .then(res =>{
@@ -144,7 +143,6 @@ const Quiz = () => {
     }
 
     const handleOnAnswer = (sentAnswer) => {
-        console.log(sentAnswer.answer);
         questions[quizState.currQuestion]["answer"] = sentAnswer.answer;
         questions[quizState.currQuestion]["correct"] = sentAnswer.correct;
         if(sentAnswer.correct) updateQuizStateItem("currScore", quizState.currScore + 1);
@@ -163,12 +161,11 @@ const Quiz = () => {
     }
 
     const validateForm = () => {
-        console.log('val');
         let playerNameError = "";
         let numQuestionsError = "";
         if(quizConfig.playerName.length >= 20) playerNameError = "Player Name Must Be Less Than 20 Characters Long."
         if(quizConfig.numQuestions < 1) numQuestionsError = "Number Of Questions Must Be Greater Than 0."
-        if(!Number.isInteger(quizConfig.numQuestions)) numQuestionsError = "Please Enter An Integer Value."
+        if(isNaN(parseInt(quizConfig.numQuestions))) numQuestionsError = "Please Enter An Integer Value."
         setFormErrors({
             playerName: playerNameError,
             numQuestions: numQuestionsError,
@@ -212,10 +209,8 @@ const Quiz = () => {
     if(!quizState.started){
         return (
            <form>
-               <TextInputComponent label="Player Name" name="playerName" type="text" defaultValue={quizConfig.playerName} onChange={handleConfigChange}/>
-               <span color="red">{formErrors.playerName}</span>
-               <TextInputComponent label="Number of Questions" name="numQuestions" type="number" defaultValue={quizConfig.numQuestions} onChange={handleConfigChange}/>
-               <span color="red">{formErrors.numQuestions}</span>
+               <TextInputComponent label="Player Name" name="playerName" type="text" defaultValue={quizConfig.playerName} onChange={handleConfigChange} error={formErrors.playerName !== ""} errorText={formErrors.playerName}/>
+               <TextInputComponent label="Number of Questions" name="numQuestions" type="number" defaultValue={quizConfig.numQuestions} onChange={handleConfigChange} error={formErrors.numQuestions !== ""} errorText={formErrors.numQuestions}/>
                <SelectInputComponent label="Category" name="category" options={categories.map(item => ({name: item.name, value: item.id}))} defaultOption={quizConfig.category} onChange={handleConfigChange}/>
                <SelectInputComponent label="Difficulty" name="difficulty" options={difficulties} defaultOption={quizConfig.difficulty} onChange={handleConfigChange}/>
                <SelectInputComponent label="Question Type" name="questionType" options={questionTypes} defaultOption={quizConfig.questionType} onChange={handleConfigChange}/>

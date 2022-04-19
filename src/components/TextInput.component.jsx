@@ -2,12 +2,11 @@ import React, {useState} from "react";
 import {FormControl, TextField} from "@mui/material";
 import {Box} from "@mui/system";
 
-const TextInputComponent = ({label, name, type="text", defaultValue="", onChange}) => {
+const TextInputComponent = ({label, name, type="text", defaultValue="", onChange, error=false, errorText=""}) => {
 
     const [currentText, setCurrentText] = useState(defaultValue);
 
     const handleOnChange = e => {
-        if(type === "number" && isNaN(parseInt(e.target.value))) return
         setCurrentText(e.target.value);
         onChange(e);
     }
@@ -15,7 +14,18 @@ const TextInputComponent = ({label, name, type="text", defaultValue="", onChange
     return(
         <Box mt={3} width="100%">
             <FormControl fullWidth size="small">
-                <TextField value={currentText} name={name} onChange={handleOnChange} variant="outlined" label={label} type={type} size="small"/>
+                <TextField
+                    value={currentText}
+                    name={name}
+                    onChange={handleOnChange}
+                    variant="outlined"
+                    label={label}
+                    type="text"
+                    size="small"
+                    error={error}
+                    helperText={errorText}
+                    inputProps={type === "number" ? { inputMode: 'numeric', pattern: '[0-9]*' } : {}}
+                />
             </FormControl>
         </Box>
     );
