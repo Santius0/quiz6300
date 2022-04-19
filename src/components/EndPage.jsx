@@ -30,7 +30,7 @@ const EndPage = ({score, playerName, questions, onPlayAgain}) => {
                     {passed ? "Well Done!" + playerName : "Sorry " + playerName + ". Better Luck Next Time"}
                 </Typography>
                 <Typography variant="h6" fontWeight="bold" mb={1}>
-                    Score: {score}
+                    Score: {score}/{questions.length}
                 </Typography>
                 <Button onClick={onClickedPlayAgain}>
                     Play Again! <ReplayIcon/>
