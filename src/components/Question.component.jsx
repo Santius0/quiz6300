@@ -32,7 +32,7 @@ const QuestionComponent = props => {
 
     return(
         <div>
-            <Typography mt={5}>
+            <Typography variant="h5" fontWeight="bold" fontStyle="italic" mt={5}>
                 <HTMLRenderer html={props.question.question}/>
             </Typography>
             {answers.map((value, index) => (

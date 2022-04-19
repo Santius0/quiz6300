@@ -42,8 +42,8 @@ const App = () => {
                             <Typography variant="h2" fontWeight="bold" fontStyle="italic">
                                 Quiz6300
                             </Typography>
-                            <Quiz/>
                         </TransitionComponent>
+                        <Quiz/>
                     </Box>
                 </Container>
             </AnimatePresence>

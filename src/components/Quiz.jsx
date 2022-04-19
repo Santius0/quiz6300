@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Box} from "@mui/system";
 import {Button, CircularProgress, Typography} from "@mui/material";
+import {Box} from "@mui/system";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 import QuestionComponent from "./Question.component";
@@ -157,7 +157,6 @@ const Quiz = () => {
     const reset = () => {
         setQuizState(defaultQuizState);
         setQuestions([]);
-        // setFormValid(false);
     }
 
     const validateForm = () => {
@@ -208,18 +207,20 @@ const Quiz = () => {
 
     if(!quizState.started){
         return (
-           <form>
-               <TextInputComponent label="Player Name" name="playerName" type="text" defaultValue={quizConfig.playerName} onChange={handleConfigChange} error={formErrors.playerName !== ""} errorText={formErrors.playerName}/>
-               <TextInputComponent label="Number of Questions" name="numQuestions" type="number" defaultValue={quizConfig.numQuestions} onChange={handleConfigChange} error={formErrors.numQuestions !== ""} errorText={formErrors.numQuestions}/>
-               <SelectInputComponent label="Category" name="category" options={categories.map(item => ({name: item.name, value: item.id}))} defaultOption={quizConfig.category} onChange={handleConfigChange}/>
-               <SelectInputComponent label="Difficulty" name="difficulty" options={difficulties} defaultOption={quizConfig.difficulty} onChange={handleConfigChange}/>
-               <SelectInputComponent label="Question Type" name="questionType" options={questionTypes} defaultOption={quizConfig.questionType} onChange={handleConfigChange}/>
-               <Box mt={3}>
-                   <Button type="submit" onClick={e => {e.preventDefault(); validateForm(); startQuiz();}} variant="contained">
-                       Start <PlayArrowIcon/>
-                   </Button>
-               </Box>
-           </form>
+            <TransitionComponent>
+               <form>
+                   <TextInputComponent label="Player Name" name="playerName" type="text" defaultValue={quizConfig.playerName} onChange={handleConfigChange} error={formErrors.playerName !== ""} errorText={formErrors.playerName}/>
+                   <TextInputComponent label="Number of Questions" name="numQuestions" type="number" defaultValue={quizConfig.numQuestions} onChange={handleConfigChange} error={formErrors.numQuestions !== ""} errorText={formErrors.numQuestions}/>
+                   <SelectInputComponent label="Category" name="category" options={categories.map(item => ({name: item.name, value: item.id}))} defaultOption={quizConfig.category} onChange={handleConfigChange}/>
+                   <SelectInputComponent label="Difficulty" name="difficulty" options={difficulties} defaultOption={quizConfig.difficulty} onChange={handleConfigChange}/>
+                   <SelectInputComponent label="Question Type" name="questionType" options={questionTypes} defaultOption={quizConfig.questionType} onChange={handleConfigChange}/>
+                   <Box mt={3}>
+                       <Button type="submit" onClick={e => {e.preventDefault(); validateForm(); startQuiz();}} variant="contained">
+                           Start <PlayArrowIcon/>
+                       </Button>
+                   </Box>
+               </form>
+            </TransitionComponent>
         );
     }
 

@@ -13,7 +13,7 @@ export const defaultFadeTransition = {
 
 const TransitionComponent = (props) => {
     return(
-        <motion.div initial={"out"} animate={"in"} exit={"out"} variants={props.variants ? props.variants : defaultFadeTransition} transition={{ duration: 0.65, repeat: 0}}>
+        <motion.div initial={"out"} animate={"in"} exit={"out"} variants={props.variants ? props.variants : defaultFadeTransition} transition={{ duration: 1.0, repeat: 0}}>
             {props.children}
         </motion.div>
     )
