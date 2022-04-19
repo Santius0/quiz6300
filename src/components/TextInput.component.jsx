@@ -7,6 +7,7 @@ const TextInputComponent = ({label, name, type="text", defaultValue="", onChange
     const [currentText, setCurrentText] = useState(defaultValue);
 
     const handleOnChange = e => {
+        if(type === "number" && isNaN(parseInt(e.target.value))) return
         setCurrentText(e.target.value);
         onChange(e);
     }

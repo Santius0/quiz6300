@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Box} from "@mui/system";
-import {Typography, CircularProgress, Button} from "@mui/material";
+import {Button, CircularProgress, Typography} from "@mui/material";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 import QuestionComponent from "./Question.component";
@@ -51,6 +51,10 @@ const Quiz = () => {
     const [questions, setQuestions] = useState([]);
 
     const [categories, setCategories] = useState([]);
+
+    const [formErrors, setFormErrors] = useState({playerName: "", numQuestions: ""});
+
+    let formValid = false;
 
     useEffect(() => {
         fetchSessionToken();
@@ -155,10 +159,25 @@ const Quiz = () => {
     const reset = () => {
         setQuizState(defaultQuizState);
         setQuestions([]);
-        fetchQuestions();
+        // setFormValid(false);
+    }
+
+    const validateForm = () => {
+        console.log('val');
+        let playerNameError = "";
+        let numQuestionsError = "";
+        if(quizConfig.playerName.length >= 20) playerNameError = "Player Name Must Be Less Than 20 Characters Long."
+        if(quizConfig.numQuestions < 1) numQuestionsError = "Number Of Questions Must Be Greater Than 0."
+        if(!Number.isInteger(quizConfig.numQuestions)) numQuestionsError = "Please Enter An Integer Value."
+        setFormErrors({
+            playerName: playerNameError,
+            numQuestions: numQuestionsError,
+        });
+        formValid = playerNameError === "" && numQuestionsError === "";
     }
 
     const startQuiz = () => {
+        if(!formValid) return
         fetchQuestions();
         if(quizConfig.playerName === "") updateQuizConfigItem("playerName", "Anonymous");
         updateQuizStateItem("started", true);
@@ -194,12 +213,14 @@ const Quiz = () => {
         return (
            <form>
                <TextInputComponent label="Player Name" name="playerName" type="text" defaultValue={quizConfig.playerName} onChange={handleConfigChange}/>
+               <span color="red">{formErrors.playerName}</span>
                <TextInputComponent label="Number of Questions" name="numQuestions" type="number" defaultValue={quizConfig.numQuestions} onChange={handleConfigChange}/>
+               <span color="red">{formErrors.numQuestions}</span>
                <SelectInputComponent label="Category" name="category" options={categories.map(item => ({name: item.name, value: item.id}))} defaultOption={quizConfig.category} onChange={handleConfigChange}/>
                <SelectInputComponent label="Difficulty" name="difficulty" options={difficulties} defaultOption={quizConfig.difficulty} onChange={handleConfigChange}/>
                <SelectInputComponent label="Question Type" name="questionType" options={questionTypes} defaultOption={quizConfig.questionType} onChange={handleConfigChange}/>
                <Box mt={3}>
-                   <Button type="submit" onClick={e => {e.preventDefault(); startQuiz();}} variant="contained">
+                   <Button type="submit" onClick={e => {e.preventDefault(); validateForm(); startQuiz();}} variant="contained">
                        Start <PlayArrowIcon/>
                    </Button>
                </Box>
