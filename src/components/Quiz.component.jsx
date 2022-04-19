@@ -2,11 +2,13 @@ import React, {useEffect, useState} from "react";
 import {Box} from "@mui/system";
 import {Typography, CircularProgress, Button} from "@mui/material";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import ReplayIcon from '@mui/icons-material/Replay';
 
 import QuestionComponent from "./Question.component";
 import SelectInputComponent from "./SelectInput.component";
 import TextInputComponent from "./TextInput.component";
+import EndPage from "./EndPage";
+import {displayError, displaySuccess} from "../utils";
+import TransitionComponent from "./Transition.component";
 
 const defaultChoice = {name: "Any", value: ""};
 
@@ -27,7 +29,7 @@ const QuizComponent = () => {
 
     const defaultQuizConfig = {
         playerName: "",
-        numQuestions: 1,
+        numQuestions: 10,
         category: defaultChoice,
         difficulty: difficulties[0],
         questionType: questionTypes[0],
@@ -52,8 +54,8 @@ const QuizComponent = () => {
 
     useEffect(() => {
         fetchSessionToken();
-        // fetchQuestions();
         fetchCategories();
+        displaySuccess("Welcome To Quiz6300!");
     }, [])
 
     const updateQuizConfigItem = (key, value) => {
@@ -92,7 +94,7 @@ const QuizComponent = () => {
                 updateQuizStateItem("loading", false);
             })
             .catch(err => {
-                console.log(err)
+                displayError(err.message);
             });
     }
 
@@ -110,7 +112,7 @@ const QuizComponent = () => {
                     updateQuizStateItem("loading", false);
                 })
                 .catch(err => {
-                    console.log(err);
+                    displayError(err.message);
                 })
         }
     }
@@ -127,16 +129,21 @@ const QuizComponent = () => {
                 updateQuizStateItem("loading", false);
             })
             .catch(err  => {
-                console.log(err);
+                displayError(err.message);
             });
     }
 
     const handleConfigChange = e => {
-        updateQuizConfigItem(e.target.name, e.target.value);
+        const {name, value} = e.target;
+        if(e.type === "change") updateQuizConfigItem(name, value);
+        else updateQuizConfigItem(name, {name, value})
     }
 
-    const handleOnAnswer = (correct) => {
-        if(correct) updateQuizStateItem("currScore", quizState.currScore + 1);
+    const handleOnAnswer = (sentAnswer) => {
+        console.log(sentAnswer.answer);
+        questions[quizState.currQuestion]["answer"] = sentAnswer.answer;
+        questions[quizState.currQuestion]["correct"] = sentAnswer.correct;
+        if(sentAnswer.correct) updateQuizStateItem("currScore", quizState.currScore + 1);
         nextQuestion();
     }
 
@@ -146,7 +153,6 @@ const QuizComponent = () => {
     }
 
     const reset = () => {
-        // setQuizConfig(defaultQuizConfig);
         setQuizState(defaultQuizState);
         setQuestions([]);
         fetchQuestions();
@@ -154,6 +160,7 @@ const QuizComponent = () => {
 
     const startQuiz = () => {
         fetchQuestions();
+        if(quizConfig.playerName === "") updateQuizConfigItem("playerName", "Anonymous");
         updateQuizStateItem("started", true);
     }
 
@@ -171,7 +178,7 @@ const QuizComponent = () => {
                 setCategories([defaultChoice].concat(body.trivia_categories));
             })
             .catch(err => {
-                console.log(err);
+                displayError(err.message);
             })
     }
 
@@ -189,7 +196,7 @@ const QuizComponent = () => {
                <TextInputComponent label="Player Name" name="playerName" type="text" defaultValue={quizConfig.playerName} onChange={handleConfigChange}/>
                <TextInputComponent label="Number of Questions" name="numQuestions" type="number" defaultValue={quizConfig.numQuestions} onChange={handleConfigChange}/>
                <SelectInputComponent label="Category" name="category" options={categories.map(item => ({name: item.name, value: item.id}))} defaultOption={quizConfig.category} onChange={handleConfigChange}/>
-               <SelectInputComponent label="Difficulty" name="difficulty" options={difficulties} defaultOption={quizConfig.difficulty} defaultOptiononChange={handleConfigChange}/>
+               <SelectInputComponent label="Difficulty" name="difficulty" options={difficulties} defaultOption={quizConfig.difficulty} onChange={handleConfigChange}/>
                <SelectInputComponent label="Question Type" name="questionType" options={questionTypes} defaultOption={quizConfig.questionType} onChange={handleConfigChange}/>
                <Box mt={3}>
                    <Button type="submit" onClick={e => {e.preventDefault(); startQuiz();}} variant="contained">
@@ -201,26 +208,23 @@ const QuizComponent = () => {
     }
 
     if(quizState.finished){
-        return (
-            <Box mt={30}>
-                <Typography variant="h3" fontWeight="bold" mb={3}>
-                    Final Sore: {quizState.currScore}
-                </Typography>
-                <Button onClick={e => {e.preventDefault(); reset();}}>
-                    Play Again! <ReplayIcon/>
-                </Button>
-            </Box>
+        return(
+            <TransitionComponent>
+                <EndPage score={quizState.currScore} questions={questions} onPlayAgain={reset}/>
+            </TransitionComponent>
         );
     }
 
     return(
         <div>
             <Box>
-                <Typography variant="h4">Question: {quizState.currQuestion + 1}/{questions.length}</Typography>
-                <QuestionComponent question={questions[quizState.currQuestion]} onAnswer={handleOnAnswer}/>
-                <Box mt={5}>
-                    Score: {quizState.currScore} / {questions.length}
-                </Box>
+                <TransitionComponent>
+                    <Typography variant="h4">Question: {quizState.currQuestion + 1}/{questions.length}</Typography>
+                    <QuestionComponent question={questions[quizState.currQuestion]} onAnswer={handleOnAnswer}/>
+                    <Box mt={5}>
+                        Score: {quizState.currScore} / {questions.length}
+                    </Box>
+                </TransitionComponent>
             </Box>
         </div>
     );

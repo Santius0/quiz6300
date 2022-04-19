@@ -17,6 +17,7 @@ const QuestionComponent = props => {
         } else {
             setAnswers(["True", "False"]);
         }
+        setSelected(null);
     }, [props.question])
 
     const handleSelect = (answerIndex) => {
@@ -26,7 +27,7 @@ const QuestionComponent = props => {
     }
 
     const submitAnswer = () => {
-        props.onAnswer(answers[selected] === props.question.correct_answer);
+        props.onAnswer({correct: answers[selected] === props.question.correct_answer, answer: answers[selected]});
     }
 
     return(
