@@ -9,7 +9,7 @@ import sad from "../media/images/sad.png";
 import HTMLRenderer from "react-html-renderer";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
-const EndPage = ({score, questions, onPlayAgain}) => {
+const EndPage = ({score, playerName, questions, onPlayAgain}) => {
 
     const solutionsRef = useRef(null);
 
@@ -27,7 +27,7 @@ const EndPage = ({score, questions, onPlayAgain}) => {
             <ImageComponent src={passed ? happy : sad} width={200} height={200}/>
             <Box mt={6}>
                 <Typography variant="h3" fontWeight="bold" mb={2}>
-                    {passed ? "Well Done!" : "Better Luck Next Time"}
+                    {passed ? "Well Done!" + playerName : "Sorry " + playerName + ". Better Luck Next Time"}
                 </Typography>
                 <Typography variant="h6" fontWeight="bold" mb={1}>
                     Score: {score}

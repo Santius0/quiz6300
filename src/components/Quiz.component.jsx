@@ -210,7 +210,7 @@ const QuizComponent = () => {
     if(quizState.finished){
         return(
             <TransitionComponent>
-                <EndPage score={quizState.currScore} questions={questions} onPlayAgain={reset}/>
+                <EndPage score={quizState.currScore} playerName={quizConfig.playerName} questions={questions} onPlayAgain={reset}/>
             </TransitionComponent>
         );
     }
