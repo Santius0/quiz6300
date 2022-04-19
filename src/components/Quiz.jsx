@@ -215,7 +215,7 @@ const Quiz = () => {
                    <SelectInputComponent label="Difficulty" name="difficulty" options={difficulties} defaultOption={quizConfig.difficulty} onChange={handleConfigChange}/>
                    <SelectInputComponent label="Question Type" name="questionType" options={questionTypes} defaultOption={quizConfig.questionType} onChange={handleConfigChange}/>
                    <Box mt={3}>
-                       <Button type="submit" onClick={e => {e.preventDefault(); validateForm(); startQuiz();}} variant="contained">
+                       <Button type="submit" onClick={e => {e.preventDefault(); validateForm(); startQuiz();}} variant="contained" fullWidth={true}>
                            Start <PlayArrowIcon/>
                        </Button>
                    </Box>
