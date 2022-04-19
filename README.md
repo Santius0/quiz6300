@@ -11,7 +11,7 @@
 4. [React Toastify](https://www.npmjs.com/package/react-toastify)
 5. [React HTML Renderer](https://www.npmjs.com/package/react-html-renderer)
 6. [Github Pages](https://www.npmjs.com/package/gh-pages)
-7. Icons From [FlatIcon]()
+7. Icons From [FlatIcon](https://www.flaticon.com/)
    1. <a href="https://www.flaticon.com/free-icons/happy" title="happy icons">Happy icons created by Freepik - Flaticon</a>
    2. <a href="https://www.flaticon.com/free-icons/sad" title="sad icons">Sad icons created by justicon - Flaticon</a>
    3. <a href="https://www.flaticon.com/free-icons/quiz" title="quiz icons">Quiz icons created by smashingstocks - Flaticon</a>
