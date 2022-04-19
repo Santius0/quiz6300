@@ -1,7 +1,7 @@
 import logo from "./media/images/quiz.png";
 import {useMemo} from "react";
 import './App.css';
-import QuizComponent from "./components/Quiz.component";
+import Quiz from "./components/Quiz";
 import {Container, Typography} from "@mui/material";
 import {Box} from "@mui/system";
 import ParticlesBg from 'particles-bg'
@@ -42,7 +42,7 @@ const App = () => {
                             <Typography variant="h2" fontWeight="bold" fontStyle="italic">
                                 Quiz6300
                             </Typography>
-                            <QuizComponent/>
+                            <Quiz/>
                         </TransitionComponent>
                     </Box>
                 </Container>

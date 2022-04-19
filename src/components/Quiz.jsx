@@ -25,7 +25,7 @@ const questionTypes = [
     {name: "True/False", value: "boolean"},
 ];
 
-const QuizComponent = () => {
+const Quiz = () => {
 
     const defaultQuizConfig = {
         playerName: "",
@@ -230,4 +230,4 @@ const QuizComponent = () => {
     );
 }
 
-export default QuizComponent;
+export default Quiz;
