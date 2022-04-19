@@ -221,9 +221,6 @@ const Quiz = () => {
                 <TransitionComponent>
                     <Typography variant="h4">Question: {quizState.currQuestion + 1}/{questions.length}</Typography>
                     <QuestionComponent question={questions[quizState.currQuestion]} onAnswer={handleOnAnswer}/>
-                    <Box mt={5}>
-                        Score: {quizState.currScore} / {questions.length}
-                    </Box>
                 </TransitionComponent>
             </Box>
         </div>
