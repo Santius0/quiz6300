@@ -138,6 +138,7 @@ const Quiz = () => {
 
     const handleConfigChange = e => {
         const {name, value} = e.target;
+        console.log(name, value);
         if(e.type === "change") updateQuizConfigItem(name, value);
         else updateQuizConfigItem(name, {name, value})
     }
@@ -190,7 +191,7 @@ const Quiz = () => {
                 return res.json();
             })
             .then(body => {
-                setCategories([defaultChoice].concat(body.trivia_categories));
+                setCategories([{id:"", name:"Any"}].concat(body.trivia_categories));
             })
             .catch(err => {
                 displayError(err.message);
