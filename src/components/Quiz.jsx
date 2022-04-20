@@ -138,7 +138,6 @@ const Quiz = () => {
 
     const handleConfigChange = e => {
         const {name, value} = e.target;
-        console.log(name, value);
         if(e.type === "change") updateQuizConfigItem(name, value);
         else updateQuizConfigItem(name, {name, value})
     }
