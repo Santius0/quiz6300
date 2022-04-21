@@ -1,4 +1,3 @@
-import {useMemo} from "react";
 import {Container, Typography} from "@mui/material";
 import {Box} from "@mui/system";
 import {ToastContainer} from 'react-toastify';
@@ -14,8 +13,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import logo from "./media/images/quiz.png";
 
-
-const bgAnimations = ['custom', 'cobweb'];
 
 const App = () => {
 
@@ -34,8 +31,6 @@ const App = () => {
         random: 20
     };
 
-    const bg = useMemo(() => Math.floor(Math.random() * bgAnimations.length), []); //select 1 of 2 animated backgrounds
-
     return (
         <div>
             <AnimatePresence exitBeforeEnter={true}>
@@ -51,7 +46,7 @@ const App = () => {
                     </Box>
                 </Container>
             </AnimatePresence>
-            <ParticlesBg type={bgAnimations[bg]} config={config} bg={true}/>
+            <ParticlesBg type="custom" config={config} bg={true}/>
             <ToastContainer/>
         </div>
       );
