@@ -3,11 +3,15 @@ import {Button, Typography} from "@mui/material";
 import {Box} from "@mui/system";
 import HTMLRenderer from "react-html-renderer";
 
+
+// component to render each question
 const QuestionComponent = props => {
 
     const [selected, setSelected] = useState(null);
     const [answers, setAnswers] = useState([]);
 
+    // on load, add the options for the question
+    // for multiple choice, we add the correct answer in and shuffle the solutions around
     useEffect(() => {
         if(props.question.type === 'multiple') {
             setAnswers(props.question.incorrect_answers.concat(props.question.correct_answer)

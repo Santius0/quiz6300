@@ -1,21 +1,25 @@
-import logo from "./media/images/quiz.png";
 import {useMemo} from "react";
-import './App.css';
-import Quiz from "./components/Quiz";
 import {Container, Typography} from "@mui/material";
 import {Box} from "@mui/system";
-import ParticlesBg from 'particles-bg'
 import {ToastContainer} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import {AnimatePresence} from "framer-motion";
+import ParticlesBg from 'particles-bg'
 
-import ImageComponent from "./components/Image.component";
-import TransitionComponent from "./components/Transition.component";
+import Quiz from "./components/QuizComponents/Quiz";
+import ImageComponent from "./components/QuizComponents/Image.component";
+import TransitionComponent from "./components/QuizComponents/Transition.component";
+
+import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
+
+import logo from "./media/images/quiz.png";
+
 
 const bgAnimations = ['custom', 'cobweb'];
 
 const App = () => {
 
+    // config for custom animated background
     let config = {
         num: [4, 7],
         rps: 0.1,
@@ -30,7 +34,7 @@ const App = () => {
         random: 20
     };
 
-    const bg = useMemo(() => Math.floor(Math.random() * bgAnimations.length), []);
+    const bg = useMemo(() => Math.floor(Math.random() * bgAnimations.length), []); //select 1 of 2 animated backgrounds
 
     return (
         <div>

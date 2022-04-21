@@ -1,14 +1,16 @@
 import React, {useMemo, useRef} from "react";
 import {Box} from "@mui/system";
-import ImageComponent from "./Image.component";
 import {Button, Typography} from "@mui/material";
 import ReplayIcon from "@mui/icons-material/Replay";
-
-import happy from "../media/images/happy.png";
-import sad from "../media/images/sad.png";
-import HTMLRenderer from "react-html-renderer";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import HTMLRenderer from "react-html-renderer";
 
+import ImageComponent from "./Image.component";
+
+import happy from "../../media/images/happy.png";
+import sad from "../../media/images/sad.png";
+
+// display results page for user
 const EndPage = ({score, playerName, questions, onPlayAgain}) => {
 
     const solutionsRef = useRef(null);
